@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Robux Gift Card Code Countdown</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 50px;
+            margin: 20px 0;
+        }
+        p {
+            font-size: 20px;
+            margin: 20px 0;
+            color: #333;
+        }
+        .countdown-container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px #ddd;
+            margin: 50px auto;
+            width: 300px;
+        }
+        .countdown-value {
+            font-size: 40px;
+            margin: 0 10px;
+        }
+        .countdown-text {
+            font-size: 20px;
+            margin: 0 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown-container">
+        <h1><span class="countdown-value">00:00:30</span><span class="countdown-text">Wait until end for free Robux gift card code.</span></h1>
+    </div>
+
+    <script>
+        let timeLeft = 300;
+        let timerInterval;
+
+        function countDown() {
+            const minutes = Math.floor((timeLeft / 60) % 60);
+            const seconds = Math.floor(timeLeft % 60);
+
+            document.querySelector('.countdown-value').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            timeLeft--;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.querySelector('.countdown-text').textContent = 'Your free Robux gift card code will be displayed shortly!';
+            }
+        }
+
+        timerInterval = setInterval(countDown, 1000);
+    </script>
+</body>
+</html>
